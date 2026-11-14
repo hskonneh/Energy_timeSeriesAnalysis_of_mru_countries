@@ -1,5 +1,5 @@
 ---
-title: "Data Wrangling and analysis"
+title: "Time Series Analysis on Energy Consumption within the Mano RIver Union"
 format: html
 ---
 
@@ -14,3 +14,59 @@ library(ggtime, warn.conflicts = FALSE)
 ```
 
 ### The next step
+Let's import the REQUIRED data sets into the project.
+```{r}
+sl_energy <- read_csv("dataSource\\Energy_consump_SL.csv", skip = 1, show_col_types = TRUE)
+lib_energy <- read_csv("dataSource\\Energy_consump_LIB.csv", skip = 1, show_col_types = TRUE)
+gui_energy <- read_csv("dataSource\\Energy_consump_GUI.csv", skip = 1, show_col_types = TRUE)
+```
+### The next step
+we now wrangle each data set into how we want it for a time series analysis.
+We start with sl_energy dataset.
+```{r}
+sl_energy |> View()
+#remove the first two columns
+sl_energy <- sl_energy[, !(names(sl_energy) %in% c("API", "...2"))]
+#slice the first row
+sl_energy <- sl_energy |> slice(-1)
+#transpose the df to matrix
+sl_energy <- sl_energy |> t()
+#trasform again to dataFrame
+sl_energy <- as.data.frame(sl_energy)
+#let's add a new index column
+sl_energy <- sl_energy |> rowid_to_column(var = "index")
+#lets rename our energy consumption observation column
+sl_energy <- sl_energy |> rename(sl_en_cons = V1)
+```
+### Next with Liberia Dataset
+```{r}
+lib_energy <- lib_energy[, !(names(lib_energy) %in% c("API", "...2"))]
+lib_energy <- lib_energy |> slice(-1)
+lib_energy <- lib_energy |> t()
+lib_energy <- lib_energy |> as.data.frame()
+lib_energy <- lib_energy |> rowid_to_column(var = "index")
+lib_energy <- lib_energy |> rename(lib_en_cons = V1)
+```
+### Next with the Guinea Dataset
+```{r}
+gui_energy <- gui_energy[, !(names(gui_energy) %in% c("API", "...2"))]
+gui_energy <- gui_energy |> slice(-1)
+gui_energy <- gui_energy |> t()
+gui_energy <- gui_energy |> as.data.frame()
+gui_energy <- gui_energy |> rowid_to_column(var = "index")
+gui_energy <- gui_energy |> rename(gui_en_cons = V1)
+```
+#### Now let's create just one variable called data_years.
+```{r}
+#lets load any data into it, i choose sl energy, you can choose anyone.
+dy <- read_csv("dataSource\\Energy_consump_SL.csv", skip = 1, show_col_types = TRUE)
+dy <- dy |> 
+    mutate(index = row_number(), .before = 2)
+    dy <- dy[, !(names(dy) %in% c("index"))]
+    data_years <- data_years[, !(names(data_years) %in% c("API", "...2"))]
+data_years <- data_years |> slice(-1) |>View() 
+dy <- dy |> as.data.frame()
+dy <- dy |> t()
+rm(data_years)
+
+```
