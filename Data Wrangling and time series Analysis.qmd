@@ -1,0 +1,16 @@
+---
+title: "Data Wrangling and analysis"
+format: html
+---
+
+```{r}
+library(tidyverse, warn.conflicts = FALSE)
+library(dplyr, warn.conflicts = FALSE)
+library(readr, warn.conflicts = FALSE)
+library(tsibble, warn.conflicts = FALSE) #let's add the tsibble library
+library(feasts, warn.conflicts = FALSE)
+library(mixtime, warn.conflicts = FALSE)
+library(ggtime, warn.conflicts = FALSE)
+```
+
+### The next step
