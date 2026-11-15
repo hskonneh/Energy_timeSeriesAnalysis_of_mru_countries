@@ -276,6 +276,84 @@ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 </div>
 </section>
 </section>
+<section id="lets-enter-the-tides-of-time" class="level3">
+<h3 class="anchored" data-anchor-id="lets-enter-the-tides-of-time">Let’s enter the tides of TIME</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># let's turn the DataFrame to a tsbblie</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>en_dset <span class="ot">&lt;-</span> en_dset <span class="sc">|&gt;</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as_tsibble</span>(<span class="at">index =</span> date_year, <span class="at">key =</span> country) <span class="co"># let's convert to a time series table &lt;tbl_ts&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="lets-flex-our-muscle-with-some-function-building." class="level4">
+<h4 class="anchored" data-anchor-id="lets-flex-our-muscle-with-some-function-building."><em>let’s flex our muscle with some function building.</em> 😎</h4>
+</section>
+</section>
+<section id="lets-create-a-function-that-can-print-out-a-trend-chat-when-called-upon." class="level3">
+<h3 class="anchored" data-anchor-id="lets-create-a-function-that-can-print-out-a-trend-chat-when-called-upon.">let’s create a function that can print out a trend chat when called upon.</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">#let's create a variable called country_names with all the names of the countries in the table.</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>country_names <span class="ot">&lt;-</span> en_dset<span class="sc">$</span>country <span class="sc">|&gt;</span> <span class="fu">unique</span>()</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co">#now let's create the function called country_trend.</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>country_trend <span class="ot">&lt;-</span> <span class="cf">function</span> (val) {</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    en_dset <span class="sc">|&gt;</span> </span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">filter</span>(country <span class="sc">==</span> val) <span class="sc">|&gt;</span> </span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">autoplot</span>(energy_consumption, <span class="fu">aes</span>(<span class="at">color =</span> country)) <span class="sc">+</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">labs</span>(</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">title =</span> <span class="fu">sprintf</span>(<span class="st">"Trend Analysis of Net Energy Consumed in %s"</span>, val),</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">subtitle =</span> <span class="st">"Annual data from 1980 to 2024"</span>,</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">x =</span> <span class="st">"Year"</span>,</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">caption =</span> <span class="st">"This is an open source project. by Hassan S. Konneh 2026."</span>,</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>            <span class="at">y =</span> <span class="st">"Energy Consumed"</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>            <span class="co"># tag = "For Training Purposes"</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>        ) <span class="sc">+</span></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>            <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>            <span class="fu">theme</span>(</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>                <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>                <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">face =</span> <span class="st">"italic"</span>)</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a><span class="co"># note, use sprintf(), and %s for text, %d for integers, %f for decimals, remember C++? 😎</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="lets-call-the-function-country_trend" class="level4">
+<h4 class="anchored" data-anchor-id="lets-call-the-function-country_trend">Let’s call the function “country_trend”</h4>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">country_trend</span>(<span class="st">"Sierra Leone"</span>) <span class="co"># Use any of the three countries</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Data-Wrangling-and-time-series-Analysis_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="lets-add-some-smoothing-curve-to-understand-our-trend" class="level4">
+<h4 class="anchored" data-anchor-id="lets-add-some-smoothing-curve-to-understand-our-trend">Let’s add some smoothing curve to understand our trend</h4>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>country_smooth <span class="ot">&lt;-</span> <span class="cf">function</span> (val) {</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">country_trend</span>(val) <span class="sc">+</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_smooth</span>( <span class="at">level =</span> <span class="fl">0.95</span>, <span class="at">span =</span> <span class="fl">0.25</span>) <span class="co"># level is the confidene band @ 0.95 as degault. Span control the curve smoothness.</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="now-lets-call-the-new-country_smooth-function." class="level4">
+<h4 class="anchored" data-anchor-id="now-lets-call-the-new-country_smooth-function.">Now let’s call the new country_smooth function.</h4>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">#input the name of the country you want view with smooth trend</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">country_smooth</span>(<span class="st">"Sierra Leone"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using method = 'loess' and formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Data-Wrangling-and-time-series-Analysis_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
 
 </main>
 <!-- /main column -->
