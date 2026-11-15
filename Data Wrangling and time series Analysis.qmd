@@ -59,14 +59,26 @@ gui_energy <- gui_energy |> rename(gui_en_cons = V1)
 #### Now let's create just one variable called data_years.
 ```{r}
 #lets load any data into it, i choose sl energy, you can choose anyone.
-dy <- read_csv("dataSource\\Energy_consump_SL.csv", skip = 1, show_col_types = TRUE)
-dy <- dy |> 
-    mutate(index = row_number(), .before = 2)
-    dy <- dy[, !(names(dy) %in% c("index"))]
-    data_years <- data_years[, !(names(data_years) %in% c("API", "...2"))]
-data_years <- data_years |> slice(-1) |>View() 
-dy <- dy |> as.data.frame()
-dy <- dy |> t()
-rm(data_years)
-
+year_vals <- read_csv("dataSource\\Energy_consump_SL.csv", skip = 1, show_col_types = TRUE)
+# let's remove the first cols
+year_vals <- year_vals[, !(names(year_vals) %in% c("API", "...2"))]
+year_vals <- year_vals |> slice(-1) #lets remove the empty row or the first row.
+#let's pivot the table right with a pivot_longer fxb
+year_vals <- year_vals |> pivot_longer(
+    cols = names(year_vals),
+    names_to = "years",
+    values_to = "observations"
+        )
+# let's remove observation col and add an index col
+year_vals <- year_vals[, !(names(year_vals) %in% c("observations"))] |> 
+    rowid_to_column(var = "index")
+year_vals <- year_vals |> as.data.frame()
+```
+Our next step is to combine all tables into one using joins.
+```{r}
+en_dset <- year_vals |> 
+    left_join(sl_energy, by = "index") |> 
+    left_join(lib_energy, by = "index") |> 
+    left_join(gui_energy, by = "index") |> 
+    as.data.frame() # don't forger to convert your new table to dataFrame.
 ```

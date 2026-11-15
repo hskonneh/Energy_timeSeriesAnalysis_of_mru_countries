@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Data Wrangling and analysis</title>
+<title>Time Series Analysis on Energy Consumption within the Mano RIver Union</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -87,7 +87,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Data Wrangling and analysis</h1>
+<h1 class="title">Time Series Analysis on Energy Consumption within the Mano RIver Union</h1>
 </div>
 
 
@@ -128,6 +128,118 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mixtime, <span class="at">warn.conflicts =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggtime, <span class="at">warn.conflicts =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<section id="the-next-step" class="level3">
+<h3 class="anchored" data-anchor-id="the-next-step">The next step</h3>
+<p>Let’s import the REQUIRED data sets into the project.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>sl_energy <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"dataSource</span><span class="sc">\\</span><span class="st">Energy_consump_SL.csv"</span>, <span class="at">skip =</span> <span class="dv">1</span>, <span class="at">show_col_types =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>New names:
+Rows: 2 Columns: 47
+── Column specification
+──────────────────────────────────────────────────────── Delimiter: "," chr
+(2): API, ...2 dbl (45): 1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988,
+1989, 1990, ...
+ℹ Use `spec()` to retrieve the full column specification for this data. ℹ
+Specify the column types or set `show_col_types = FALSE` to quiet this message.
+• `` -&gt; `...2`</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>lib_energy <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"dataSource</span><span class="sc">\\</span><span class="st">Energy_consump_LIB.csv"</span>, <span class="at">skip =</span> <span class="dv">1</span>, <span class="at">show_col_types =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>New names:
+Rows: 2 Columns: 47
+── Column specification
+──────────────────────────────────────────────────────── Delimiter: "," chr
+(2): API, ...2 dbl (45): 1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988,
+1989, 1990, ...
+ℹ Use `spec()` to retrieve the full column specification for this data. ℹ
+Specify the column types or set `show_col_types = FALSE` to quiet this message.
+• `` -&gt; `...2`</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>gui_energy <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"dataSource</span><span class="sc">\\</span><span class="st">Energy_consump_GUI.csv"</span>, <span class="at">skip =</span> <span class="dv">1</span>, <span class="at">show_col_types =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>New names:
+Rows: 2 Columns: 47
+── Column specification
+──────────────────────────────────────────────────────── Delimiter: "," chr
+(2): API, ...2 dbl (45): 1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988,
+1989, 1990, ...
+ℹ Use `spec()` to retrieve the full column specification for this data. ℹ
+Specify the column types or set `show_col_types = FALSE` to quiet this message.
+• `` -&gt; `...2`</code></pre>
+</div>
+</div>
+</section>
+<section id="the-next-step-1" class="level3">
+<h3 class="anchored" data-anchor-id="the-next-step-1">The next step</h3>
+<p>we now wrangle each data set into how we want it for a time series analysis. We start with sl_energy dataset.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>sl_energy <span class="sc">|&gt;</span> <span class="fu">View</span>()</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#remove the first two columns</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>sl_energy <span class="ot">&lt;-</span> sl_energy[, <span class="sc">!</span>(<span class="fu">names</span>(sl_energy) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"API"</span>, <span class="st">"...2"</span>))]</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">#slice the first row</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>sl_energy <span class="ot">&lt;-</span> sl_energy <span class="sc">|&gt;</span> <span class="fu">slice</span>(<span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">#transpose the df to matrix</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>sl_energy <span class="ot">&lt;-</span> sl_energy <span class="sc">|&gt;</span> <span class="fu">t</span>()</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">#trasform again to dataFrame</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>sl_energy <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(sl_energy)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co">#let's add a new index column</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>sl_energy <span class="ot">&lt;-</span> sl_energy <span class="sc">|&gt;</span> <span class="fu">rowid_to_column</span>(<span class="at">var =</span> <span class="st">"index"</span>)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co">#lets rename our energy consumption observation column</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>sl_energy <span class="ot">&lt;-</span> sl_energy <span class="sc">|&gt;</span> <span class="fu">rename</span>(<span class="at">sl_en_cons =</span> V1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="next-with-liberia-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="next-with-liberia-dataset">Next with Liberia Dataset</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>lib_energy <span class="ot">&lt;-</span> lib_energy[, <span class="sc">!</span>(<span class="fu">names</span>(lib_energy) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"API"</span>, <span class="st">"...2"</span>))]</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>lib_energy <span class="ot">&lt;-</span> lib_energy <span class="sc">|&gt;</span> <span class="fu">slice</span>(<span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>lib_energy <span class="ot">&lt;-</span> lib_energy <span class="sc">|&gt;</span> <span class="fu">t</span>()</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>lib_energy <span class="ot">&lt;-</span> lib_energy <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>()</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>lib_energy <span class="ot">&lt;-</span> lib_energy <span class="sc">|&gt;</span> <span class="fu">rowid_to_column</span>(<span class="at">var =</span> <span class="st">"index"</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>lib_energy <span class="ot">&lt;-</span> lib_energy <span class="sc">|&gt;</span> <span class="fu">rename</span>(<span class="at">lib_en_cons =</span> V1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="next-with-the-guinea-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="next-with-the-guinea-dataset">Next with the Guinea Dataset</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>gui_energy <span class="ot">&lt;-</span> gui_energy[, <span class="sc">!</span>(<span class="fu">names</span>(gui_energy) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"API"</span>, <span class="st">"...2"</span>))]</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>gui_energy <span class="ot">&lt;-</span> gui_energy <span class="sc">|&gt;</span> <span class="fu">slice</span>(<span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>gui_energy <span class="ot">&lt;-</span> gui_energy <span class="sc">|&gt;</span> <span class="fu">t</span>()</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>gui_energy <span class="ot">&lt;-</span> gui_energy <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>()</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>gui_energy <span class="ot">&lt;-</span> gui_energy <span class="sc">|&gt;</span> <span class="fu">rowid_to_column</span>(<span class="at">var =</span> <span class="st">"index"</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>gui_energy <span class="ot">&lt;-</span> gui_energy <span class="sc">|&gt;</span> <span class="fu">rename</span>(<span class="at">gui_en_cons =</span> V1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="now-lets-create-just-one-variable-called-data_years." class="level4">
+<h4 class="anchored" data-anchor-id="now-lets-create-just-one-variable-called-data_years.">Now let’s create just one variable called data_years.</h4>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#lets load any data into it, i choose sl energy, you can choose anyone.</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>dy <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"dataSource</span><span class="sc">\\</span><span class="st">Energy_consump_SL.csv"</span>, <span class="at">skip =</span> <span class="dv">1</span>, <span class="at">show_col_types =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>New names:
+Rows: 2 Columns: 47
+── Column specification
+──────────────────────────────────────────────────────── Delimiter: "," chr
+(2): API, ...2 dbl (45): 1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988,
+1989, 1990, ...
+ℹ Use `spec()` to retrieve the full column specification for this data. ℹ
+Specify the column types or set `show_col_types = FALSE` to quiet this message.
+• `` -&gt; `...2`</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>dy <span class="ot">&lt;-</span> dy <span class="sc">|&gt;</span> </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">index =</span> <span class="fu">row_number</span>(), <span class="at">.before =</span> <span class="dv">2</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    dy <span class="ot">&lt;-</span> dy[, <span class="sc">!</span>(<span class="fu">names</span>(dy) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"index"</span>))]</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co">#     data_years &lt;- data_years[, !(names(data_years) %in% c("API", "...2"))]</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co"># data_years &lt;- data_years |&gt; slice(-1) |&gt;View() </span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>dy <span class="ot">&lt;-</span> dy <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>()</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>dy <span class="ot">&lt;-</span> dy <span class="sc">|&gt;</span> <span class="fu">t</span>()</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(data_years)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in rm(data_years): object 'data_years' not found</code></pre>
+</div>
+</div>
+</section>
+</section>
 
 </main>
 <!-- /main column -->
