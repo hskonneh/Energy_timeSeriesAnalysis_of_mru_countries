@@ -82,3 +82,26 @@ en_dset <- year_vals |>
     left_join(gui_energy, by = "index") |> 
     as.data.frame() # don't forger to convert your new table to dataFrame.
 ```
+Let's clean our space
+```{r}
+rm("gui_energy", "lib_energy", "sl_energy", "year_vals") # removed stored variables
+en_dset <- en_dset |> select(-index) #let's remove the index column
+en_dset <- en_dset |> 
+    mutate(date_year = as.integer(years), .before = 1) |> View() #let's modify the DF, add a new column and put as the first column in the DF
+en_dset <- en_dset[, !(names(en_dset) %in% c("years"))]
+
+# let's pivot our dataframe
+en_dset <- en_dset |>
+    pivot_longer( #tihs to make the df longer and width shorter
+        cols = c(sl_en_cons, lib_en_cons, gui_en_cons), # columns to pivot
+        names_to = "country", # new column name of the pivoted column headers
+        values_to = "energy_consumption" #new column name of the pivoted column values
+    ) |>
+    mutate(
+        country = case_when( #we use this to match case and modigy the same country column
+            country == "sl_en_cons" ~ "Sierra Leone", # if the value of a country is "sl_en_cons" change to "Sierra Leone"
+            country == "lib_en_cons" ~ "Liberia", # if the value of a country is "lib_en_cons" change to "Liberia"
+            country == "gui_en_cons" ~ "Guinea" # if the value of a country is "gui_en_cons" change to "Guinea"
+        )
+    )
+```

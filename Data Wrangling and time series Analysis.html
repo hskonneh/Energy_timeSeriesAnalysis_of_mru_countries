@@ -214,7 +214,7 @@ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 <h4 class="anchored" data-anchor-id="now-lets-create-just-one-variable-called-data_years.">Now let’s create just one variable called data_years.</h4>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#lets load any data into it, i choose sl energy, you can choose anyone.</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>dy <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"dataSource</span><span class="sc">\\</span><span class="st">Energy_consump_SL.csv"</span>, <span class="at">skip =</span> <span class="dv">1</span>, <span class="at">show_col_types =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>year_vals <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"dataSource</span><span class="sc">\\</span><span class="st">Energy_consump_SL.csv"</span>, <span class="at">skip =</span> <span class="dv">1</span>, <span class="at">show_col_types =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>New names:
 Rows: 2 Columns: 47
@@ -226,17 +226,35 @@ Rows: 2 Columns: 47
 Specify the column types or set `show_col_types = FALSE` to quiet this message.
 • `` -&gt; `...2`</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>dy <span class="ot">&lt;-</span> dy <span class="sc">|&gt;</span> </span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">index =</span> <span class="fu">row_number</span>(), <span class="at">.before =</span> <span class="dv">2</span>)</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    dy <span class="ot">&lt;-</span> dy[, <span class="sc">!</span>(<span class="fu">names</span>(dy) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"index"</span>))]</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co">#     data_years &lt;- data_years[, !(names(data_years) %in% c("API", "...2"))]</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co"># data_years &lt;- data_years |&gt; slice(-1) |&gt;View() </span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>dy <span class="ot">&lt;-</span> dy <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>()</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>dy <span class="ot">&lt;-</span> dy <span class="sc">|&gt;</span> <span class="fu">t</span>()</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(data_years)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in rm(data_years): object 'data_years' not found</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># let's remove the first cols</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>year_vals <span class="ot">&lt;-</span> year_vals[, <span class="sc">!</span>(<span class="fu">names</span>(year_vals) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"API"</span>, <span class="st">"...2"</span>))]</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>year_vals <span class="ot">&lt;-</span> year_vals <span class="sc">|&gt;</span> <span class="fu">slice</span>(<span class="sc">-</span><span class="dv">1</span>) <span class="co">#lets remove the empty row or the first row.</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co">#let's pivot the table right with a pivot_longer fxb</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>year_vals <span class="ot">&lt;-</span> year_vals <span class="sc">|&gt;</span> <span class="fu">pivot_longer</span>(</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">names</span>(year_vals),</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"years"</span>,</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"observations"</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co"># let's remove observation col and add an index col</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>year_vals <span class="ot">&lt;-</span> year_vals[, <span class="sc">!</span>(<span class="fu">names</span>(year_vals) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"observations"</span>))] <span class="sc">|&gt;</span> </span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rowid_to_column</span>(<span class="at">var =</span> <span class="st">"index"</span>)</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>year_vals <span class="ot">&lt;-</span> year_vals <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<p>Our next step is to combine all tables into one using joins.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>en_dset <span class="ot">&lt;-</span> year_vals <span class="sc">|&gt;</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(sl_energy, <span class="at">by =</span> <span class="st">"index"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(lib_energy, <span class="at">by =</span> <span class="st">"index"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(gui_energy, <span class="at">by =</span> <span class="st">"index"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.data.frame</span>() <span class="co"># don't forger to convert your new table to dataFrame.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Let’s clean our space</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="st">"gui_energy"</span>, <span class="st">"lib_energy"</span>, <span class="st">"sl_energy"</span>, <span class="st">"year_vals"</span>) <span class="co"># removed stored variables</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>en_dset <span class="ot">&lt;-</span> en_dset <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span>index)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">#let's pivot our dataframe</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a> <span class="co"># things fall apart so what happened to chinua achebe</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 </section>
