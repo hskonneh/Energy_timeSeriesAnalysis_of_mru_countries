@@ -106,3 +106,24 @@ en_dset <- en_dset |>
         )
     )
 ```
+### Let's enter the tides of TIME
+```{r}
+en_dset <- en_dset |> 
+    as_tsibble(index = date_year, key = country) # let's convert to a time series table <tbl_ts>
+en_dset |> autoplot(energy_consumption) +
+geom_point(size = 1) +
+scale_color_manual(values = c(
+    "Sierra Leone" = "dodgerblue",
+    "Liberia" = "forestgreen",
+    "Guinea" = "firebrick"
+)) +
+    labs(
+        title = "Energy Consumption over Time within the Mano River Union",
+        subtitle = "Annual data from 1980 to 2024",
+        x = "Year",
+        y = "Energy Consumption",
+        color = "country"
+    )
+    # to be continued
+
+```
