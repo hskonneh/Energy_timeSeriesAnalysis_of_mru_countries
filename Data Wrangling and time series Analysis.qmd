@@ -3,7 +3,7 @@ title: "Time Series Analysis on Energy Consumption within the Mano RIver Union"
 format: html
 ---
 
-```{r}
+```{r Required_Libries}
 library(tidyverse, warn.conflicts = FALSE)
 library(dplyr, warn.conflicts = FALSE)
 library(readr, warn.conflicts = FALSE)
@@ -15,7 +15,7 @@ library(ggtime, warn.conflicts = FALSE)
 
 ### The next step
 Let's import the REQUIRED data sets into the project.
-```{r}
+```{r dataSets_Import}
 sl_energy <- read_csv("dataSource\\Energy_consump_SL.csv", skip = 1, show_col_types = TRUE)
 lib_energy <- read_csv("dataSource\\Energy_consump_LIB.csv", skip = 1, show_col_types = TRUE)
 gui_energy <- read_csv("dataSource\\Energy_consump_GUI.csv", skip = 1, show_col_types = TRUE)
@@ -23,8 +23,7 @@ gui_energy <- read_csv("dataSource\\Energy_consump_GUI.csv", skip = 1, show_col_
 ### The next step
 we now wrangle each data set into how we want it for a time series analysis.
 We start with sl_energy dataset.
-```{r}
-sl_energy |> View()
+```{r Wrangle_and_Transform_Sierra_Leone_Energy_Data_Set}
 #remove the first two columns
 sl_energy <- sl_energy[, !(names(sl_energy) %in% c("API", "...2"))]
 #slice the first row
@@ -39,7 +38,7 @@ sl_energy <- sl_energy |> rowid_to_column(var = "index")
 sl_energy <- sl_energy |> rename(sl_en_cons = V1)
 ```
 ### Next with Liberia Dataset
-```{r}
+```{r Wrangle_and_Transform_Liberia_Energy_Data_Se}
 lib_energy <- lib_energy[, !(names(lib_energy) %in% c("API", "...2"))]
 lib_energy <- lib_energy |> slice(-1)
 lib_energy <- lib_energy |> t()
@@ -48,7 +47,7 @@ lib_energy <- lib_energy |> rowid_to_column(var = "index")
 lib_energy <- lib_energy |> rename(lib_en_cons = V1)
 ```
 ### Next with the Guinea Dataset
-```{r}
+```{r Wrangle_and_Transform_Guinea_Energy_Data_Se}
 gui_energy <- gui_energy[, !(names(gui_energy) %in% c("API", "...2"))]
 gui_energy <- gui_energy |> slice(-1)
 gui_energy <- gui_energy |> t()
@@ -57,7 +56,7 @@ gui_energy <- gui_energy |> rowid_to_column(var = "index")
 gui_energy <- gui_energy |> rename(gui_en_cons = V1)
 ```
 #### Now let's create just one variable called data_years.
-```{r}
+```{r get_the_yearTime_Data}
 #lets load any data into it, i choose sl energy, you can choose anyone.
 year_vals <- read_csv("dataSource\\Energy_consump_SL.csv", skip = 1, show_col_types = TRUE)
 # let's remove the first cols
@@ -72,10 +71,10 @@ year_vals <- year_vals |> pivot_longer(
 # let's remove observation col and add an index col
 year_vals <- year_vals[, !(names(year_vals) %in% c("observations"))] |> 
     rowid_to_column(var = "index")
-year_vals <- year_vals |> as.data.frame()
+year_vals <- year_vals |> as.data.frame() # convert your year_vals data to Data Frame again.
 ```
 Our next step is to combine all tables into one using joins.
-```{r}
+```{r Join_all_dataSets_into_one}
 en_dset <- year_vals |> 
     left_join(sl_energy, by = "index") |> 
     left_join(lib_energy, by = "index") |> 
@@ -83,14 +82,16 @@ en_dset <- year_vals |>
     as.data.frame() # don't forger to convert your new table to dataFrame.
 ```
 Let's clean our space
-```{r}
+```{r Lets_keep_our_space_tidy }
 rm("gui_energy", "lib_energy", "sl_energy", "year_vals") # removed stored variables
 en_dset <- en_dset |> select(-index) #let's remove the index column
 en_dset <- en_dset |> 
-    mutate(date_year = as.integer(years), .before = 1) |> View() #let's modify the DF, add a new column and put as the first column in the DF
+    mutate(date_year = as.integer(years), .before = 1) #let's modify the DF, add a new column and put as the first column in the DF
 en_dset <- en_dset[, !(names(en_dset) %in% c("years"))]
-
-# let's pivot our dataframe
+```
+#### Let's pivot our dataFrame
+```{r We_do_our_final_Transformation}
+# we use pivot longer
 en_dset <- en_dset |>
     pivot_longer( #tihs to make the df longer and width shorter
         cols = c(sl_en_cons, lib_en_cons, gui_en_cons), # columns to pivot

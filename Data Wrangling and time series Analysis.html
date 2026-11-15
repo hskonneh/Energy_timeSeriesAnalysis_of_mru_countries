@@ -174,19 +174,18 @@ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 <h3 class="anchored" data-anchor-id="the-next-step-1">The next step</h3>
 <p>we now wrangle each data set into how we want it for a time series analysis. We start with sl_energy dataset.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>sl_energy <span class="sc">|&gt;</span> <span class="fu">View</span>()</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#remove the first two columns</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>sl_energy <span class="ot">&lt;-</span> sl_energy[, <span class="sc">!</span>(<span class="fu">names</span>(sl_energy) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"API"</span>, <span class="st">"...2"</span>))]</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">#slice the first row</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>sl_energy <span class="ot">&lt;-</span> sl_energy <span class="sc">|&gt;</span> <span class="fu">slice</span>(<span class="sc">-</span><span class="dv">1</span>)</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">#transpose the df to matrix</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>sl_energy <span class="ot">&lt;-</span> sl_energy <span class="sc">|&gt;</span> <span class="fu">t</span>()</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">#trasform again to dataFrame</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>sl_energy <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(sl_energy)</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co">#let's add a new index column</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>sl_energy <span class="ot">&lt;-</span> sl_energy <span class="sc">|&gt;</span> <span class="fu">rowid_to_column</span>(<span class="at">var =</span> <span class="st">"index"</span>)</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co">#lets rename our energy consumption observation column</span></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>sl_energy <span class="ot">&lt;-</span> sl_energy <span class="sc">|&gt;</span> <span class="fu">rename</span>(<span class="at">sl_en_cons =</span> V1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#remove the first two columns</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>sl_energy <span class="ot">&lt;-</span> sl_energy[, <span class="sc">!</span>(<span class="fu">names</span>(sl_energy) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"API"</span>, <span class="st">"...2"</span>))]</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#slice the first row</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>sl_energy <span class="ot">&lt;-</span> sl_energy <span class="sc">|&gt;</span> <span class="fu">slice</span>(<span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co">#transpose the df to matrix</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>sl_energy <span class="ot">&lt;-</span> sl_energy <span class="sc">|&gt;</span> <span class="fu">t</span>()</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co">#trasform again to dataFrame</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>sl_energy <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(sl_energy)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co">#let's add a new index column</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>sl_energy <span class="ot">&lt;-</span> sl_energy <span class="sc">|&gt;</span> <span class="fu">rowid_to_column</span>(<span class="at">var =</span> <span class="st">"index"</span>)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co">#lets rename our energy consumption observation column</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>sl_energy <span class="ot">&lt;-</span> sl_energy <span class="sc">|&gt;</span> <span class="fu">rename</span>(<span class="at">sl_en_cons =</span> V1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="next-with-liberia-dataset" class="level3">
@@ -238,7 +237,7 @@ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 <span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co"># let's remove observation col and add an index col</span></span>
 <span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>year_vals <span class="ot">&lt;-</span> year_vals[, <span class="sc">!</span>(<span class="fu">names</span>(year_vals) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"observations"</span>))] <span class="sc">|&gt;</span> </span>
 <span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rowid_to_column</span>(<span class="at">var =</span> <span class="st">"index"</span>)</span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>year_vals <span class="ot">&lt;-</span> year_vals <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>year_vals <span class="ot">&lt;-</span> year_vals <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>() <span class="co"># convert your year_vals data to Data Frame again.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Our next step is to combine all tables into one using joins.</p>
 <div class="cell">
@@ -251,10 +250,29 @@ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 <p>Let’s clean our space</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="st">"gui_energy"</span>, <span class="st">"lib_energy"</span>, <span class="st">"sl_energy"</span>, <span class="st">"year_vals"</span>) <span class="co"># removed stored variables</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>en_dset <span class="ot">&lt;-</span> en_dset <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span>index)</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">#let's pivot our dataframe</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a> <span class="co"># things fall apart so what happened to chinua achebe</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>en_dset <span class="ot">&lt;-</span> en_dset <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span>index) <span class="co">#let's remove the index column</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>en_dset <span class="ot">&lt;-</span> en_dset <span class="sc">|&gt;</span> </span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">date_year =</span> <span class="fu">as.integer</span>(years), <span class="at">.before =</span> <span class="dv">1</span>) <span class="co">#let's modify the DF, add a new column and put as the first column in the DF</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>en_dset <span class="ot">&lt;-</span> en_dset[, <span class="sc">!</span>(<span class="fu">names</span>(en_dset) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"years"</span>))]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="lets-pivot-our-dataframe" class="level4">
+<h4 class="anchored" data-anchor-id="lets-pivot-our-dataframe">Let’s pivot our dataFrame</h4>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># we use pivot longer</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>en_dset <span class="ot">&lt;-</span> en_dset <span class="sc">|&gt;</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>( <span class="co">#tihs to make the df longer and width shorter</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">cols =</span> <span class="fu">c</span>(sl_en_cons, lib_en_cons, gui_en_cons), <span class="co"># columns to pivot</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">names_to =</span> <span class="st">"country"</span>, <span class="co"># new column name of the pivoted column headers</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">values_to =</span> <span class="st">"energy_consumption"</span> <span class="co">#new column name of the pivoted column values</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">country =</span> <span class="fu">case_when</span>( <span class="co">#we use this to match case and modigy the same country column</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>            country <span class="sc">==</span> <span class="st">"sl_en_cons"</span> <span class="sc">~</span> <span class="st">"Sierra Leone"</span>, <span class="co"># if the value of a country is "sl_en_cons" change to "Sierra Leone"</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>            country <span class="sc">==</span> <span class="st">"lib_en_cons"</span> <span class="sc">~</span> <span class="st">"Liberia"</span>, <span class="co"># if the value of a country is "lib_en_cons" change to "Liberia"</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>            country <span class="sc">==</span> <span class="st">"gui_en_cons"</span> <span class="sc">~</span> <span class="st">"Guinea"</span> <span class="co"># if the value of a country is "gui_en_cons" change to "Guinea"</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 </section>
