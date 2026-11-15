@@ -105,13 +105,81 @@ en_dset <- en_dset |>
             country == "gui_en_cons" ~ "Guinea" # if the value of a country is "gui_en_cons" change to "Guinea"
         )
     )
+
 ```
 ### Let's enter the tides of TIME
 ```{r}
+# let's turn the DataFrame to a tsbblie
+en_dset <- en_dset |>
+    as_tsibble(index = date_year, key = country) # let's convert to a time series table <tbl_ts>
+
+```
+
+#### another plot
+```{r}
+en_dset |>
+    autoplot(energy_consumption) +
+    labs(
+        title = "Energy Consumption over Time within the Mano River Union",
+        subtitle = "Annual data from 1980 to 2024",
+        x = "Year",
+        y = "Energy Consumption Level",
+        color = "country",
+        # tag = "For Training Purposes"
+    ) +
+    theme_sub_axis_x(title = "hello") +
+    theme(
+        plot.title = element_text(hjust = 0.5, face = "bold"),
+        plot.subtitle = element_text(hjust = 0.5, face = "italic")
+    )
+
+```
+# we plot for sierra leone only
+```{r}
+en_dset |> 
+        filter(country == "Sierra Leone") |> 
+            autoplot(energy_consumption, aes(color = NULL)) + geom_smooth(span = 0.25) + theme_classic(
+                    paper = "white",
+                            ink = "darkgrey",
+                                    accent = "dodgerblue"
+                                        )
+    # 
+
+```
+### let's flex our muscle with some function building. 😎
+
+```{r}
+country_names <- c(en_dset$country |> unique())
+count_plot <- function(a) {
+  en_dset |>
+    filter(country == a) |>
+    autoplot(energy_consumption, aes(color = country)) + 
+    geom_smooth(span = 0.25, level = .5) +
+    labs(
+      title = "Energy Consumption over Time within the Mano River Union",
+      subtitle = "Annual data from 1980 to 2024",
+      x = "Year",
+      y = "Energy Consumption",
+      color = "country",
+      # tag = "For Training Purposes"
+    ) +
+    theme_minimal()
+}
+
+count_plot("Sierra Leone") + theme(
+      axis.title = element_text(hjust = 0.5, face = "bold"),
+      axis.subtitle = element_text(hjust = 0.5, face = "italic")
+    )
+    # rm(count_plot, country_names, en_dset)
+```
+
+```{r}
+
 en_dset <- en_dset |> 
     as_tsibble(index = date_year, key = country) # let's convert to a time series table <tbl_ts>
 en_dset |> autoplot(energy_consumption) +
-geom_point(size = 1) +
+geom_smooth() +
+# geom_point(size = 1) +
 scale_color_manual(values = c(
     "Sierra Leone" = "dodgerblue",
     "Liberia" = "forestgreen",
@@ -122,8 +190,55 @@ scale_color_manual(values = c(
         subtitle = "Annual data from 1980 to 2024",
         x = "Year",
         y = "Energy Consumption",
-        color = "country"
-    )
+        color = "country",
+        tag = "For Training Purposes"
+    ) +
+        theme_minimal() +
+        theme(
+            plot.title = element_text(hjust = 0.5, face = "bold"),
+            plot.subtitle = element_text(hjust = 0.5, face = "italic")
+             )
     # to be continued
 
+```
+###      let's create a function that can be called to print out each time series for each country.
+```{r}
+#let's create a variable called country_names with all the names of the countries in the table.
+country_names <- en_dset$country |> unique()
+#now let's create the function called country_trend.
+country_trend <- function (val) {
+    en_dset |> 
+        filter(country == val) |> 
+        autoplot(energy_consumption, aes(color = country)) +
+        labs(
+            title = sprintf("Trend Analysis of Net Energy Consumed in %s", val),
+            subtitle = "Annual data from 1980 to 2024",
+            x = "Year",
+            caption = "This is an open source project. by Hassan S. Konneh 2026.",
+            y = "Energy Consumed"
+            
+        ) +
+            theme_classic() +
+            theme(
+                plot.title = element_text(hjust = 0.5, face = "bold"),
+                plot.subtitle = element_text(hjust = 0.5, face = "italic")
+            )
+}
+# note, use sprintf(), and %s for text, %d for integers, %f for decimals
+```
+
+#### let's call the function "country_trend"
+```{r}
+country_trend("Sierra Leone")
+```
+#### let's add some smoothing curve to understand our trend
+```{r}
+country_smooth <- function (val) {
+    country_trend(val) +
+        geom_smooth( level = 0.85, span = 0.25)
+}
+```
+
+```{r}
+country_smooth("Sierra Leone")
 ```
